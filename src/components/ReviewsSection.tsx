@@ -4,129 +4,110 @@ import { Star } from "lucide-react";
 const reviews = [
   {
     name: "Chee-T'ah-Ah",
-    text: "This is a really wonderful program that has helped me lose 5 pounds in a week",
-    color: "from-blue-500 to-cyan-500",
+    text: "This is a really wonderful program that has helped me lose 5 pounds in a week.",
+    color: "from-cyan-500 to-blue-500",
   },
   {
     name: "Robert Matthews",
-    text: "It's a great way to get into shape. Should have done it a long time ago 😃",
-    color: "from-purple-500 to-pink-500",
+    text: "It's a great way to get into shape. Should have done it a long time ago.",
+    color: "from-cyan-500 to-blue-400",
   },
   {
     name: "Hyrum Keddington",
-    text: "The first program to get me in the groove cos it gave me everything I needed to get started, including a menu and a grocery list.",
-    color: "from-orange-500 to-red-500",
+    text: "The first program that gave me everything to start, including a menu and grocery list.",
+    color: "from-violet-500 to-fuchsia-500",
   },
   {
     name: "Ahmad Adyarso",
-    text: "I tried the program for a week; it has decent features, a good workout plan, and a diet. The diet plan also has a grocery list and step-by-step preparation.",
-    color: "from-green-500 to-emerald-500",
+    text: "Good workout plan and diet setup. The grocery list and prep instructions are practical.",
+    color: "from-emerald-500 to-teal-400",
   },
   {
     name: "Robin Mersh",
-    text: "Nice program, works well, and contains a good, well thought out set of exercises",
-    color: "from-indigo-500 to-purple-500",
+    text: "Works well and includes a thoughtful set of exercises.",
+    color: "from-indigo-500 to-cyan-400",
   },
   {
     name: "Chan Makuach",
-    text: "The plan is good, I like how it evaluates a proper workout according to fitness but it would be great if there's an offline mode",
-    color: "from-rose-500 to-pink-500",
+    text: "I like how it evaluates workouts by fitness level and keeps routines structured.",
+    color: "from-purple-500 to-cyan-500",
   },
 ];
 
 const ReviewsSection = () => {
   return (
-    <section className="py-24 bg-gradient-dark-section overflow-hidden relative">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-fire/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+    <section
+      id="reviews"
+      className="section-pad relative overflow-hidden bg-gradient-dark-section"
+    >
+      <div className="absolute -left-16 top-14 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container relative z-10 mx-auto px-4 sm:px-6">
         <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
+          className="mx-auto mb-10 max-w-3xl text-center"
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="font-heading text-4xl md:text-5xl font-bold mb-6">
-            Loved by <span className="text-gradient-fire">62,000+</span> happy
-            users
+          <span className="badge-pill mb-4">Social Proof</span>
+          <h2 className="text-4xl leading-[0.92] text-foreground sm:text-5xl lg:text-6xl">
+            Loved by 62,000+ users
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-4">
-            Join thousands of people who have transformed their fitness journey
-            with MadMuscles
+          <p className="mt-4 text-base text-muted-foreground sm:text-lg">
+            Real people, real consistency, real body transformations.
           </p>
-          <div className="flex justify-center gap-2">
+          <div className="mt-4 flex justify-center gap-1">
             {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Star size={24} className="fill-primary text-primary" />
-              </motion.div>
+              <Star key={i} size={20} className="fill-primary text-primary" />
             ))}
           </div>
         </motion.div>
       </div>
 
-      {/* Scrolling reviews */}
-      <div className="relative mt-12">
-        <div className="flex animate-scroll-left gap-4 sm:gap-6 w-max px-4">
-          {[...reviews, ...reviews].map((r, i) => (
-            <motion.div
-              key={i}
-              className="bg-card border border-border rounded-2xl p-4 sm:p-6 w-72 sm:w-80 md:w-96 shrink-0 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:translate-y-[-4px]"
-              whileHover={{ shadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)" }}
+      <div className="relative">
+        <div className="flex w-max animate-scroll-left gap-4 px-4 sm:gap-6">
+          {[...reviews, ...reviews].map((review, i) => (
+            <motion.article
+              key={`${review.name}-${i}`}
+              className="surface-card surface-card-hover glow-panel w-72 shrink-0 p-5 sm:w-80"
+              whileHover={{ y: -4 }}
             >
-              {/* Header with rating and gradient avatar */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-12 h-12 rounded-full bg-gradient-to-br ${r.color} flex items-center justify-center text-white font-bold text-lg shadow-md`}
-                  >
-                    {r.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">
-                      {r.name}
-                    </p>
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, j) => (
-                        <Star
-                          key={j}
-                          size={12}
-                          className="fill-primary text-primary"
-                        />
-                      ))}
-                    </div>
+              <div className="mb-4 flex items-center gap-3">
+                <div
+                  className={`flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br ${review.color} text-sm font-bold text-white`}
+                >
+                  {review.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">
+                    {review.name}
+                  </p>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, j) => (
+                      <Star
+                        key={`${review.name}-star-${j}`}
+                        size={12}
+                        className="fill-primary text-primary"
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
-
-              {/* Review text */}
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {r.text}
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {review.text}
               </p>
-
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
-
-              {/* Footer badge */}
-              <div className="flex gap-2">
-                <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">
-                  Verified User
+              <div className="mt-4 border-t border-border/60 pt-3">
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                  Verified user
                 </span>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
-        {/* Gradient fade edges */}
-        <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-gradient-dark-section to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-gradient-dark-section to-transparent pointer-events-none" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-background to-transparent" />
       </div>
     </section>
   );

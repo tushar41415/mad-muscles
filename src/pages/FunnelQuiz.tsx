@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import bodyTypesImg from "@/assets/body-types.png";
-import heroImg from "@/assets/hero-pose.png";
+import ParticleBackground from "@/components/ParticleBackground";
 
 interface QuizOption {
   label: string;
   value: string;
-  image?: string;
 }
 
 interface QuizStep {
@@ -118,7 +116,15 @@ const stepRouteMap: Record<string, number> = {
 };
 
 const routeFromIndex = (i: number) => {
-  const names = ["step-one","step-two","step-three","step-four","step-five","step-six","step-seven"];
+  const names = [
+    "step-one",
+    "step-two",
+    "step-three",
+    "step-four",
+    "step-five",
+    "step-six",
+    "step-seven",
+  ];
   return names[i] || "step-one";
 };
 
@@ -126,95 +132,109 @@ const FunnelQuiz = ({ stepName }: { stepName: string }) => {
   const navigate = useNavigate();
   const currentStepIndex = stepRouteMap[stepName] ?? 0;
   const step = quizSteps[currentStepIndex];
-  const totalSteps = quizSteps.length;
-  const progress = ((currentStepIndex + 1) / totalSteps) * 100;
+  const progress = ((currentStepIndex + 1) / quizSteps.length) * 100;
 
   const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
+
+  const goNext = () => {
+    if (currentStepIndex < quizSteps.length - 1) {
+      setSelectedMulti([]);
+      navigate(`/funnel/${routeFromIndex(currentStepIndex + 1)}`);
+      return;
+    }
+    navigate("/funnel/result");
+  };
+
+  const goBack = () => {
+    if (currentStepIndex > 0) {
+      navigate(`/funnel/${routeFromIndex(currentStepIndex - 1)}`);
+      return;
+    }
+    navigate("/");
+  };
 
   const handleSelect = (value: string) => {
     if (step.type === "multi-select") {
       setSelectedMulti((prev) =>
         prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
       );
-    } else {
-      goNext();
+      return;
     }
-  };
-
-  const goNext = () => {
-    if (currentStepIndex < totalSteps - 1) {
-      setSelectedMulti([]);
-      navigate(`/funnel/${routeFromIndex(currentStepIndex + 1)}`);
-    } else {
-      navigate("/funnel/result");
-    }
-  };
-
-  const goBack = () => {
-    if (currentStepIndex > 0) {
-      navigate(`/funnel/${routeFromIndex(currentStepIndex - 1)}`);
-    } else {
-      navigate("/");
-    }
+    goNext();
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border px-4 py-3 flex items-center justify-between">
-        <button onClick={goBack} className="text-muted-foreground hover:text-foreground transition-colors">
-          <ChevronLeft size={24} />
-        </button>
-        <Link to="/" className="font-heading text-xl font-bold tracking-wider">
-          <span className="text-gradient-fire">MAD</span>
-          <span className="text-foreground border border-primary px-1 py-0.5 text-xs ml-1">MUSCLES</span>
-        </Link>
-        <div className="w-6" />
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      <ParticleBackground className="z-[1] opacity-70" density={26} />
+      <div className="absolute left-1/3 top-0 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
+
+      <header className="relative z-10 border-b border-border/60 bg-background/70 px-4 py-4 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+          <button
+            onClick={goBack}
+            className="rounded-lg border border-border/70 bg-card/50 p-2 text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="Go back"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <Link to="/" className="font-heading text-3xl leading-none">
+            <span className="text-gradient-fire">MAD</span>
+            <span className="ml-1 rounded-md border border-primary/60 bg-primary/10 px-2 py-0.5 text-sm text-foreground">
+              MUSCLES
+            </span>
+          </Link>
+
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Step {currentStepIndex + 1}/{quizSteps.length}
+          </span>
+        </div>
       </header>
 
-      {/* Progress bar */}
-      <div className="w-full h-1 bg-secondary">
+      <div className="relative z-10 h-1 w-full bg-secondary/70">
         <motion.div
           className="h-full bg-gradient-fire"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.35 }}
         />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-130px)] w-full max-w-5xl items-center px-4 py-10 sm:px-6">
         <AnimatePresence mode="wait">
-          <motion.div
+          <motion.section
             key={step.id}
-            initial={{ opacity: 0, x: 30 }}
+            className="surface-card glow-panel w-full p-6 sm:p-8"
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-2xl text-center"
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.25 }}
           >
-            <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-2">
+            <h1 className="text-center text-4xl leading-[0.94] text-foreground sm:text-5xl">
               {step.title}
             </h1>
             {step.subtitle && (
-              <p className="text-muted-foreground mb-8">{step.subtitle}</p>
+              <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground sm:text-base">
+                {step.subtitle}
+              </p>
             )}
 
             {step.type === "image-cards" && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {step.options.map((opt) => (
+              <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+                {step.options.map((option) => (
                   <button
-                    key={opt.value}
-                    onClick={() => handleSelect(opt.value)}
-                    className="group relative bg-card border border-border rounded-xl overflow-hidden hover:border-primary transition-colors aspect-[3/4] flex flex-col items-center justify-end p-3"
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                    className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-border/70 transition-all hover:-translate-y-0.5 hover:border-primary/70"
                   >
                     <img
                       src={bodyTypesImg}
-                      alt={opt.label}
-                      className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                      alt={option.label}
+                      className="absolute inset-0 h-full w-full object-cover opacity-50 transition-opacity group-hover:opacity-70"
                     />
-                    <span className="relative z-10 font-heading text-sm font-semibold text-foreground bg-background/80 px-3 py-1 rounded-md">
-                      {opt.label}
+                    <span className="absolute inset-x-2 bottom-2 rounded-md bg-background/80 px-2 py-1 text-xs font-semibold text-foreground sm:text-sm">
+                      {option.label}
                     </span>
                   </button>
                 ))}
@@ -222,63 +242,69 @@ const FunnelQuiz = ({ stepName }: { stepName: string }) => {
             )}
 
             {step.type === "text-cards" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
-                {step.options.map((opt) => (
+              <div className="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
+                {step.options.map((option) => (
                   <button
-                    key={opt.value}
-                    onClick={() => handleSelect(opt.value)}
-                    className="bg-card border border-border rounded-xl p-5 text-left hover:border-primary hover:bg-card/80 transition-all group"
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                    className="rounded-xl border border-border/70 bg-card/60 p-4 text-left text-base font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/70 hover:bg-card sm:text-lg"
                   >
-                    <span className="font-heading text-lg font-semibold text-foreground group-hover:text-gradient-fire transition-colors">
-                      {opt.label}
-                    </span>
+                    {option.label}
                   </button>
                 ))}
               </div>
             )}
 
             {step.type === "multi-select" && (
-              <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-lg mx-auto mb-8">
-                  {step.options.map((opt) => {
-                    const isSelected = selectedMulti.includes(opt.value);
+              <div className="mt-8">
+                <div className="mx-auto grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
+                  {step.options.map((option) => {
+                    const selected = selectedMulti.includes(option.value);
                     return (
                       <button
-                        key={opt.value}
-                        onClick={() => handleSelect(opt.value)}
-                        className={`border rounded-xl p-5 text-center transition-all ${
-                          isSelected
-                            ? "border-primary bg-primary/10"
-                            : "border-border bg-card hover:border-primary/50"
+                        key={option.value}
+                        onClick={() => handleSelect(option.value)}
+                        className={`rounded-xl border p-4 text-sm font-semibold uppercase tracking-wide transition-colors sm:text-base ${
+                          selected
+                            ? "border-primary/80 bg-primary/15 text-primary"
+                            : "border-border/70 bg-card/60 text-foreground hover:border-primary/40"
                         }`}
                       >
-                        <span className={`font-heading text-lg font-semibold ${isSelected ? "text-primary" : "text-foreground"}`}>
-                          {opt.label}
-                        </span>
+                        {option.label}
                       </button>
                     );
                   })}
                 </div>
-                <button
-                  onClick={goNext}
-                  disabled={selectedMulti.length === 0}
-                  className="bg-gradient-fire text-primary-foreground px-10 py-3 rounded-lg font-heading text-lg font-semibold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Continue
-                </button>
-              </>
+                <div className="mt-7 text-center">
+                  <button
+                    onClick={goNext}
+                    disabled={selectedMulti.length === 0}
+                    className="shine-sweep rounded-xl bg-gradient-fire px-8 py-3 text-sm font-bold uppercase tracking-wide text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40 sm:text-base"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
             )}
-          </motion.div>
+          </motion.section>
         </AnimatePresence>
-      </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="px-4 py-4 text-center">
-        <p className="text-muted-foreground text-xs">
+      <footer className="relative z-10 px-4 pb-5 text-center">
+        <p className="text-xs text-muted-foreground">
           By continuing, you agree to our{" "}
-          <a href="#" className="underline hover:text-foreground">Terms of service</a>,{" "}
-          <a href="#" className="underline hover:text-foreground">Privacy policy</a>,{" "}
-          <a href="#" className="underline hover:text-foreground">Cookie policy</a>
+          <a href="#" className="underline hover:text-foreground">
+            Terms of service
+          </a>
+          ,{" "}
+          <a href="#" className="underline hover:text-foreground">
+            Privacy policy
+          </a>
+          , and{" "}
+          <a href="#" className="underline hover:text-foreground">
+            Cookie policy
+          </a>
+          .
         </p>
       </footer>
     </div>

@@ -1,70 +1,92 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, Dumbbell, Utensils, Target } from "lucide-react";
+import { Check, Dumbbell, Target, Utensils } from "lucide-react";
 import heroImg from "@/assets/hero-pose.png";
+import ParticleBackground from "@/components/ParticleBackground";
 
 const FunnelResult = () => {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border px-4 py-3 flex items-center justify-center">
-        <Link to="/" className="font-heading text-xl font-bold tracking-wider">
-          <span className="text-gradient-fire">MAD</span>
-          <span className="text-foreground border border-primary px-1 py-0.5 text-xs ml-1">MUSCLES</span>
-        </Link>
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      <ParticleBackground className="z-[1] opacity-65" density={22} />
+      <div className="absolute -left-20 top-20 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
+      <div className="absolute -right-20 bottom-16 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
+
+      <header className="relative z-10 border-b border-border/60 bg-background/70 px-4 py-4 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-5xl justify-center">
+          <Link to="/" className="font-heading text-3xl leading-none">
+            <span className="text-gradient-fire">MAD</span>
+            <span className="ml-1 rounded-md border border-primary/60 bg-primary/10 px-2 py-0.5 text-sm text-foreground">
+              MUSCLES
+            </span>
+          </Link>
+        </div>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
-        <motion.div
-          className="max-w-2xl mx-auto text-center"
-          initial={{ opacity: 0, y: 20 }}
+      <main className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6">
+        <motion.section
+          className="surface-card glow-panel mx-auto max-w-3xl p-7 text-center sm:p-10"
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          {/* Success icon */}
-          <div className="w-20 h-20 rounded-full bg-gradient-fire flex items-center justify-center mx-auto mb-6 glow-fire">
-            <Check size={40} className="text-primary-foreground" />
+          <div className="animate-glow-pulse mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-fire shadow-xl shadow-primary/30">
+            <Check size={38} className="text-primary-foreground" />
           </div>
 
-          <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">
-            Your Plan is <span className="text-gradient-fire">Ready!</span>
+          <h1 className="text-4xl leading-[0.94] text-foreground sm:text-6xl">
+            Your custom plan is ready
           </h1>
-          <p className="text-muted-foreground text-lg mb-10">
-            Based on your answers, we've prepared a personalized program just for you.
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Based on your answers, we prepared a fitness strategy focused on
+            your current level and goals.
           </p>
 
-          {/* Plan summary cards */}
-          <div className="grid sm:grid-cols-3 gap-4 mb-10">
-            <div className="bg-card border border-border rounded-xl p-5 text-center">
-              <Dumbbell className="text-primary mx-auto mb-2" size={28} />
-              <h3 className="font-heading text-lg font-semibold text-foreground mb-1">Workout Plan</h3>
-              <p className="text-muted-foreground text-sm">Personalized exercises</p>
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-border/60 bg-background/30 p-4">
+              <Dumbbell className="mx-auto mb-2 text-primary" size={24} />
+              <p className="text-base font-semibold text-foreground">Workout plan</p>
+              <p className="text-xs text-muted-foreground">Adaptive exercises</p>
             </div>
-            <div className="bg-card border border-border rounded-xl p-5 text-center">
-              <Utensils className="text-primary mx-auto mb-2" size={28} />
-              <h3 className="font-heading text-lg font-semibold text-foreground mb-1">Meal Plan</h3>
-              <p className="text-muted-foreground text-sm">Custom nutrition</p>
+            <div className="rounded-xl border border-border/60 bg-background/30 p-4">
+              <Utensils className="mx-auto mb-2 text-primary" size={24} />
+              <p className="text-base font-semibold text-foreground">Meal plan</p>
+              <p className="text-xs text-muted-foreground">Nutrition matched to you</p>
             </div>
-            <div className="bg-card border border-border rounded-xl p-5 text-center">
-              <Target className="text-primary mx-auto mb-2" size={28} />
-              <h3 className="font-heading text-lg font-semibold text-foreground mb-1">Habit System</h3>
-              <p className="text-muted-foreground text-sm">Build daily routines</p>
+            <div className="rounded-xl border border-border/60 bg-background/30 p-4">
+              <Target className="mx-auto mb-2 text-primary" size={24} />
+              <p className="text-base font-semibold text-foreground">Habit system</p>
+              <p className="text-xs text-muted-foreground">Consistency framework</p>
             </div>
           </div>
 
-          {/* Hero image */}
-          <div className="relative w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden border-4 border-primary">
-            <img src={heroImg} alt="Your transformation" className="w-full h-full object-cover" />
+          <div className="mx-auto mt-8 h-40 w-40 overflow-hidden rounded-full border-4 border-primary/60 shadow-lg shadow-primary/25">
+            <img
+              src={heroImg}
+              alt="Body transformation"
+              className="h-full w-full object-cover"
+            />
           </div>
 
           <Link
             to="/"
-            className="inline-flex items-center gap-3 bg-gradient-fire text-primary-foreground px-10 py-4 rounded-lg font-heading text-xl font-semibold tracking-wide glow-fire hover:opacity-90 transition-opacity"
+            className="shine-sweep mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-fire px-8 py-3.5 text-base font-bold text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-[1.02]"
           >
-            Get Started Now
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            Explore website
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
           </Link>
-        </motion.div>
-      </div>
+        </motion.section>
+      </main>
     </div>
   );
 };

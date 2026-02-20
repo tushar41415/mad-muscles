@@ -8,10 +8,12 @@ import ReviewsSection from "@/components/ReviewsSection";
 import VideoSection from "@/components/VideoSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import ParticleBackground from "@/components/ParticleBackground";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+      <ParticleBackground className="fixed inset-0 -z-10 opacity-35" density={34} />
       <Navbar />
       <HeroSection />
       <WorkoutPlanSection />

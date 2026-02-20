@@ -1,129 +1,92 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const links = [
+    { label: "Programs", href: "#plans" },
+    { label: "Nutrition", href: "#nutrition" },
+    { label: "Reviews", href: "#reviews" },
+    { label: "Results", href: "#results" },
+  ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="container mx-auto px-4 flex items-center justify-between h-16">
-        {/* Logo with animation */}
-        <Link to="/" className="flex items-center gap-1 group">
+    <nav className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-background/70 backdrop-blur-2xl">
+      <div className="container mx-auto flex h-[4.5rem] items-center justify-between px-4 sm:px-6">
+        <Link to="/" className="group flex items-center gap-2">
           <motion.span
-            className="font-heading text-2xl font-bold tracking-wider"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400 }}
+            className="font-heading text-3xl leading-none"
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 360 }}
           >
             <span className="text-gradient-fire">MAD</span>
-            <span className="text-foreground border border-primary px-1.5 py-0.5 text-sm ml-1 group-hover:border-primary/60 group-hover:bg-primary/5 transition-all">
+            <span className="ml-1 rounded-md border border-primary/60 bg-primary/10 px-2 py-0.5 text-sm text-foreground transition-colors group-hover:border-primary">
               MUSCLES
             </span>
           </motion.span>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <motion.a
-            href="#"
-            className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
-            whileHover={{ color: "hsl(16, 100%, 55%)" }}
+        <div className="hidden items-center gap-7 lg:flex">
+          {links.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-sm font-semibold tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
+          <Link
+            to="/funnel/step-one"
+            className="shine-sweep inline-flex items-center gap-2 rounded-xl bg-gradient-fire px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-[1.02]"
           >
-            Help
-          </motion.a>
-          <motion.span
-            className="text-muted-foreground text-sm font-medium cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-          >
-            English 🌐
-          </motion.span>
-          <motion.button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-foreground p-2 rounded-lg hover:bg-foreground/10 transition-colors"
-            whileHover={{ scale: 1.1 }}
-          >
-            <Menu size={22} />
-          </motion.button>
+            Start now
+            <ArrowRight size={16} />
+          </Link>
         </div>
 
-        {/* Mobile menu button */}
-        <motion.button
-          className="md:hidden text-foreground p-2 rounded-lg hover:bg-foreground/10"
-          onClick={() => setIsOpen(!isOpen)}
-          whileHover={{ scale: 1.1 }}
+        <button
+          className="rounded-xl border border-border/70 bg-card/50 p-2.5 text-foreground transition-colors hover:border-primary/50 lg:hidden"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label="Toggle menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </motion.button>
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
-      <motion.div
-        className="bg-background border-b border-border/50 px-4 pb-6 pt-2 overflow-hidden"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? "auto" : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        <div className="container mx-auto space-y-2">
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            whileHover={{ x: 8 }}
-            transition={{ type: "spring", stiffness: 400 }}
+            className="border-t border-border/50 bg-background/95 px-4 pb-6 pt-4 shadow-2xl lg:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
           >
-            <Link
-              to="/"
-              className="block text-foreground hover:text-primary py-3 font-semibold px-3 rounded-lg hover:bg-primary/5 transition-all"
-              onClick={() => setIsOpen(false)}
-            >
-              🏠 Home
-            </Link>
+            <div className="container mx-auto space-y-2">
+              {links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <Link
+                to="/funnel/step-one"
+                onClick={() => setIsOpen(false)}
+                className="shine-sweep mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-fire px-5 py-3 text-sm font-semibold text-primary-foreground"
+              >
+                Build my plan
+                <ArrowRight size={16} />
+              </Link>
+            </div>
           </motion.div>
-          <motion.div
-            whileHover={{ x: 8 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <Link
-              to="/funnel/step-one"
-              className="block text-foreground hover:text-primary py-3 font-semibold px-3 rounded-lg hover:bg-primary/5 transition-all"
-              onClick={() => setIsOpen(false)}
-            >
-              💪 Choose a program
-            </Link>
-          </motion.div>
-          <motion.div
-            whileHover={{ x: 8 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <a
-              href="#"
-              className="block text-muted-foreground hover:text-foreground py-3 px-3 rounded-lg hover:bg-foreground/5 transition-all"
-            >
-              ✋ Help
-            </a>
-          </motion.div>
-          <motion.div
-            whileHover={{ x: 8 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <a
-              href="#"
-              className="block text-muted-foreground hover:text-foreground py-3 px-3 rounded-lg hover:bg-foreground/5 transition-all text-sm"
-            >
-              📋 Privacy Policy
-            </a>
-          </motion.div>
-          <motion.div
-            whileHover={{ x: 8 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <a
-              href="#"
-              className="block text-muted-foreground hover:text-foreground py-3 px-3 rounded-lg hover:bg-foreground/5 transition-all text-sm"
-            >
-              ⚖️ Terms of Service
-            </a>
-          </motion.div>
-        </div>
-      </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
